@@ -1,0 +1,58 @@
+/* Set the background color and center everything */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container for the login form */
+.login-container {
+    background: white;
+    padding: 30px;
+    width: 350px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+h1 {
+    color: #1565c0; /* Dark Blue */
+    margin-bottom: 20px;
+}
+
+/* Style for input fields */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #1565c0; /* Blue Border */
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Button Style */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1565c0; /* Dark Blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0d47a1; /* Slightly Darker Blue */
+}
+
+/* Error Message Styling */
+p {
+    color: red;
+    margin-top: 10px;
+}
