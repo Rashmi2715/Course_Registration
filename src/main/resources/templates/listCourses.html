@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course List</title>
+    <link rel="stylesheet" href="/styles/listCourses.css">
+</head>
+<body>
+    <h2>Courses</h2>
+    <a th:href="@{/courses/new}">Add New Course</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Description</th>
+            <th>Maxiumum Students</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.id}"></td>
+            <td th:text="${course.name}"></td>
+            <td th:text="${course.department}"></td>
+            <td th:text="${course.description}"></td>
+            <td th:text="${course.maxStudents}"></td>
+            <td>
+                <a th:href="@{'/courses/edit/' + ${course.id}}">Edit</a>
+                <a th:href="@{'/courses/delete/' + ${course.id}}"
+                   onclick="return confirm('Are you sure?');">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <a th:href="@{/admin/dashboard}">Back to Admin Dashboard</a>
+</body>
+</html>
