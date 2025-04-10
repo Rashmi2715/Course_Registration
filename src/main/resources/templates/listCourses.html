@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html> 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Course List</title>
@@ -6,29 +6,122 @@
 </head>
 <body>
     <h2>Courses</h2>
-    <a th:href="@{/courses/new}">Add New Course</a>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Description</th>
-            <th>Maxiumum Students</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="course : ${courses}">
-            <td th:text="${course.id}"></td>
-            <td th:text="${course.name}"></td>
-            <td th:text="${course.department}"></td>
-            <td th:text="${course.description}"></td>
-            <td th:text="${course.maxStudents}"></td>
-            <td>
-                <a th:href="@{'/courses/edit/' + ${course.id}}">Edit</a>
-                <a th:href="@{'/courses/delete/' + ${course.id}}"
-                   onclick="return confirm('Are you sure?');">Delete</a>
-            </td>
-        </tr>
-    </table>
-    <a th:href="@{/admin/dashboard}">Back to Admin Dashboard</a>
+    <a th:href="@{/courses/new}" class="btn">Add New Course</a>
+    
+    <div class="course-container">
+        <div class="course-card" th:each="course : ${courses}">
+            <h3 th:text="${course.name}"></h3>
+            <p><strong>Department:</strong> <span th:text="${course.department}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
+            <p><strong>Max Students:</strong> <span th:text="${course.maxStudents}"></span></p>
+            <div class="course-actions">
+                <a th:href="@{'/courses/edit/' + ${course.id}}" class="btn">Edit</a>
+                <a th:href="@{'/courses/delete/' + ${course.id}}" class="btn" onclick="return confirm('Are you sure?');">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/admin/dashboard}" class="btn">Back to Admin Dashboard</a>
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course List</title>
+    <link rel="stylesheet" href="/styles/listCourses.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+
+        .btn {
+            background-color: #004d99;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background-color: #003366;
+        }
+
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .course-card {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .course-actions {
+            margin-top: 10px;
+        }
+
+        select {
+            padding: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <script>
+        function filterByDepartment() {
+            const selectedDept = document.getElementById("departmentSelect").value;
+            const cards = document.querySelectorAll(".course-card");
+
+            cards.forEach(card => {
+                const dept = card.getAttribute("data-department");
+                if (selectedDept === "all" || dept === selectedDept) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Courses</h2>
+    <a th:href="@{/courses/new}" class="btn">Add New Course</a>
+
+    <!-- Department Filter -->
+    <div>
+        <label for="departmentSelect"><strong>Filter by Department:</strong></label>
+        <select id="departmentSelect" onchange="filterByDepartment()">
+            <option value="all">All</option>
+            <option value="CSE">CSE</option>
+            <option value="EEE">EEE</option>
+            <option value="ECE">ECE</option>
+        </select>
+    </div>
+
+    <div class="course-container">
+        <div class="course-card" 
+             th:each="course : ${courses}" 
+             th:attr="data-department=${course.department}">
+            <h3 th:text="${course.name}"></h3>
+            <p><strong>Department:</strong> <span th:text="${course.department}"></span></p>
+            <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
+            <p><strong>Max Students:</strong> <span th:text="${course.maxStudents}"></span></p>
+            <div class="course-actions">
+                <a th:href="@{'/courses/edit/' + ${course.id}}" class="btn">Edit</a>
+                <a th:href="@{'/courses/delete/' + ${course.id}}" class="btn" onclick="return confirm('Are you sure?');">Delete</a>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/admin/dashboard}" class="btn">Back to Admin Dashboard</a>
 </body>
 </html>

@@ -3,12 +3,65 @@
 <head>
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="/styles/student-dashboard.css">  <!-- Change the filename as needed -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
 
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 50px;
+            font-size: 36px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        nav a {
+            font-size: 18px;
+            color: #2b6cb0;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #e0f0ff;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #1d4d73;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer Styling (optional) */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome, Student!</h1>
-    <a href="/courses">Browse Courses</a> | 
-    <a href="/profile">Edit Profile</a> |
-    <a href="/student/logout">Logout</a>
+
+    <nav>
+        <a href="/profile">Edit Profile</a>
+        <a href="/student/logout">Logout</a>
+        <a href="/student/courses">Browse Courses</a>
+    </nav>
+
+    
 </body>
 </html>

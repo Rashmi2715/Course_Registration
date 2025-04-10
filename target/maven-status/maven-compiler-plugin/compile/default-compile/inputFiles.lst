@@ -1,14 +1,16 @@
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\AdminController.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\CourseController.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\HomeController.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\StudentController.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\CourseRegistrationApplication.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Admin.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Course.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Student.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\AdminRepository.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\CourseRepository.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\StudentRepository.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\AdminService.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\CourseService.java
-C:\Users\varsh\Desktop\College\Sem-6\Object Oreiented Analysis and design\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\StudentService.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\AdminController.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\CourseController.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\HomeController.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\controller\StudentController.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\CourseRegistrationApplication.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Admin.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Course.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Enrollment.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\model\Student.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\AdminRepository.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\CourseRepository.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\EnrollmentRepository.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\repository\StudentRepository.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\AdminService.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\CourseService.java
+C:\Users\shrey\Downloads\Course\Course\Course_Registration-main\src\main\java\com\example\courseRegistration\service\StudentService.java

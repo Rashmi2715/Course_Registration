@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Available Courses</title>
+    <link rel="stylesheet" href="/styles/listCourses.css">
+    <a th:href="@{'/student/enroll/' + ${course.id}}">Enroll</a>
+    <style>
+        body {
+            background-color: #e6f2ff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 90%;
+        }
+        th, td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #004d99;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            color: #003366;
+            margin-top: 20px;
+        }
+        a {
+            color: #0033cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h2>Available Courses</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Description</th>
+            <th>Max Students</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.id}"></td>
+            <td th:text="${course.name}"></td>
+            <td th:text="${course.department}"></td>
+            <td th:text="${course.description}"></td>
+            <td th:text="${course.maxStudents}"></td>
+            <td>
+                <a th:href="@{'/student/enroll/' + ${course.id}}">Enroll</a>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <a href="/student/dashboard">Back to Dashboard</a>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.example.courseRegistration.controller;
+/*package com.example.courseRegistration.controller;
 
 import com.example.courseRegistration.model.Course;
 import com.example.courseRegistration.repository.CourseRepository;
@@ -67,5 +67,29 @@ public class CourseController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
         courseRepository.delete(course);
         return "redirect:/courses";
+    }
+}
+*/
+
+package com.example.courseRegistration.controller;
+
+import com.example.courseRegistration.service.CourseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/courses")
+public class CourseController {
+
+    @Autowired
+    private CourseService courseService;
+
+    @GetMapping("")
+    public String listCourses(Model model) {
+        model.addAttribute("courses", courseService.getAllCourses());
+        return "listCourses";
     }
 }

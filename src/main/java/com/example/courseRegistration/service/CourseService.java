@@ -15,7 +15,6 @@ public class CourseService {
     public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
-
     // Retrieve all courses
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
@@ -47,4 +46,5 @@ public class CourseService {
         Course course = getCourseById(id);
         courseRepository.delete(course);
     }
+    
 }
