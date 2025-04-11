@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #28a745;
+    font-size: 18px;
+    margin: 10px;
+}
+
+a:hover {
+    color: #218838;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}

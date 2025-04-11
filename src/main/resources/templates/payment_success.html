@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Success</title>
+    <link rel="stylesheet" href="/styles/payment_success.css">
+</head>
+<body>
+    <div class="checkmark">✅</div>
+
+    <h2>Payment Successful!</h2>
+    <p>Thank you for your payment. Your enrollment is now confirmed.</p>
+    <p><strong>Transaction ID:</strong> <span th:text="${transactionId}">TXN20250411153723ABC123</span></p>
+    <p><strong>Payment Time:</strong> <span th:text="${#dates.format(timestamp, 'dd MMM yyyy HH:mm:ss')}"></span></p>
+
+    <a th:href="@{/student/enrollments}" class="back-button">Go to My Enrollments</a>
+</body>
+</html>

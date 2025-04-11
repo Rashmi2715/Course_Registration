@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Processing Payment</title>
+    <link rel="stylesheet" href="/styles/payment_processing.css">
+    <meta http-equiv="refresh"
+          th:content="'3;url=/payment/processing?enrollmentId=' + ${enrollmentId} + '&upiId=' + ${upiId}" />
+    
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="message">Processing your payment, please wait...</div>
+
+    
+</body>
+</html>
