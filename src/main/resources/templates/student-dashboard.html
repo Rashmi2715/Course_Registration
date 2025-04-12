@@ -1,67 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Student Dashboard</title>
-    <link rel="stylesheet" href="/styles/student-dashboard.css">  <!-- Change the filename as needed -->
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="/styles/availableCourses.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* Header Styles */
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-top: 50px;
-            font-size: 36px;
-        }
+    <script>
+        function filterByDepartment() {
+            const selectedDept = document.getElementById("departmentSelect").value;
+            const cards = document.querySelectorAll(".course-card");
 
-        /* Navigation Bar */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
+            cards.forEach(card => {
+                const dept = card.getAttribute("data-department");
+                card.style.display = (selectedDept === "all" || dept === selectedDept) ? "block" : "none";
+            });
         }
-
-        nav a {
-            font-size: 18px;
-            color: #2b6cb0;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            background-color: #e0f0ff;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        nav a:hover {
-            background-color: #1d4d73;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Footer Styling (optional) */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 14px;
-            color: #888;
-        }
-    </style>
+    </script>
 </head>
 <body>
-    <h1>Welcome, Student!</h1>
 
-    <nav>
-        <a href="/profile">Edit Profile</a>
-        <a href="/student/logout">Logout</a>
-        <a href="/student/courses">Browse Courses</a>
-    </nav>
+    <header class="top-bar">
+        <h1>Student Course Portal</h1>
+        <div class="top-buttons">
+            <a href="/">Logout</a>
+            <a href="/student/enrollments">Enrollments</a>
+        </div>
+    </header>
 
-    
+    <main>
+        <h2>Available Courses</h2>
+
+        <div class="filter-container">
+            <label for="departmentSelect"><strong>Filter by Department:</strong></label>
+            <select id="departmentSelect" onchange="filterByDepartment()">
+                <option value="all">All</option>
+                <option value="CSE">CSE</option>
+                <option value="EEE">EEE</option>
+                <option value="ECE">ECE</option>
+            </select>
+        </div>
+
+        <div class="course-container">
+            <div class="course-card"
+                 th:each="course : ${courses}"
+                 th:attr="data-department=${course.department}">
+                <h3 th:text="${course.name}">Course Name</h3>
+                <p><strong>Department:</strong> <span th:text="${course.department}"></span></p>
+                <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
+                <p><strong>Max Students:</strong> <span th:text="${course.maxStudents}"></span></p>
+
+                <div class="course-actions">
+                    <a class="btn" th:href="@{'/student/enroll/' + ${course.id}}">Enroll</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 Student Course Dashboard
+    </footer>
+
 </body>
 </html>

@@ -27,9 +27,9 @@
             <span th:if="${#fields.hasErrors('maxStudents')}" th:errors="*{maxStudents}"></span>
         </div>
         <div>
-            <button type="submit">Update Course</button>
+            <button type="submit" class="btn">Update Course</button>
         </div>
     </form>
-    <a th:href="@{/courses}">Back to Course List</a>
+    <a th:href="@{/courses} " class="btn">Back to Course List</a>
 </body>
 </html>

@@ -55,5 +55,19 @@ public class Enrollment {
 
     public void setStatus(String status) {
         this.status = status;
+    }   
+
+    @Transient
+     public String getAction() {
+    if ("Admin Approved".equalsIgnoreCase(this.status)) {
+        return "Make Payment";
+    } else if ("Admin Disapproved".equalsIgnoreCase(this.status)) {
+        return "Apply for Other Courses";
+    } else if ("Pending".equalsIgnoreCase(this.status)) {
+        return "Under Review";
     }
+    return "Confirmed";
+}
+
+    
 }

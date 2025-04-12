@@ -1,30 +1,3 @@
-<!--<!DOCTYPE html> 
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Course List</title>
-    <link rel="stylesheet" href="/styles/listCourses.css">
-</head>
-<body>
-    <h2>Courses</h2>
-    <a th:href="@{/courses/new}" class="btn">Add New Course</a>
-    
-    <div class="course-container">
-        <div class="course-card" th:each="course : ${courses}">
-            <h3 th:text="${course.name}"></h3>
-            <p><strong>Department:</strong> <span th:text="${course.department}"></span></p>
-            <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
-            <p><strong>Max Students:</strong> <span th:text="${course.maxStudents}"></span></p>
-            <div class="course-actions">
-                <a th:href="@{'/courses/edit/' + ${course.id}}" class="btn">Edit</a>
-                <a th:href="@{'/courses/delete/' + ${course.id}}" class="btn" onclick="return confirm('Are you sure?');">Delete</a>
-            </div>
-        </div>
-    </div>
-
-    <a th:href="@{/admin/dashboard}" class="btn">Back to Admin Dashboard</a>
-</body>
-</html>
--->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -35,6 +8,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f8ff;
+            margin-top: 20px;
         }
 
         .btn {
@@ -74,6 +48,14 @@
             padding: 6px;
             margin-bottom: 20px;
         }
+
+        /* Styling for the top-right button */
+        .top-right-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+        }
     </style>
 
     <script>
@@ -91,8 +73,23 @@
             });
         }
     </script>
+
+    <!-- ✅ Proper alert pop-up script using Thymeleaf -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let message = [[${alertMessage}]];
+        if (message !== null && message !== "") {
+            alert(message);
+        }
+        /*]]>*/
+    </script>
 </head>
 <body>
+    <!-- Back to Admin Dashboard button at the top right corner -->
+    <div class="top-right-btn">
+        <a th:href="@{/admin/dashboard}" class="btn">Home Page</a>
+    </div>
+
     <h2>Courses</h2>
     <a th:href="@{/courses/new}" class="btn">Add New Course</a>
 
@@ -121,7 +118,5 @@
             </div>
         </div>
     </div>
-
-    <a th:href="@{/admin/dashboard}" class="btn">Back to Admin Dashboard</a>
 </body>
 </html>

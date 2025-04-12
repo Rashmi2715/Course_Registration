@@ -1,4 +1,4 @@
-/*package com.example.courseRegistration.controller;
+package com.example.courseRegistration.controller;
 
 import com.example.courseRegistration.model.Course;
 import com.example.courseRegistration.repository.CourseRepository;
@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Controller
 @RequestMapping("/courses")
@@ -59,37 +61,16 @@ public class CourseController {
         courseRepository.save(course);
         return "redirect:/courses";
     }
-
-    // Delete a course at URL: /courses/delete/{id}
     @GetMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable("id") long id) {
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
-        courseRepository.delete(course);
+    public String deleteCourse(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        try {
+            Course course = courseRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid course Id:" + id));
+            courseRepository.delete(course);
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("alertMessage", "Cannot delete course because students are registered for it.");
+        }
         return "redirect:/courses";
     }
-}
-*/
 
-package com.example.courseRegistration.controller;
-
-import com.example.courseRegistration.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-@Controller
-@RequestMapping("/courses")
-public class CourseController {
-
-    @Autowired
-    private CourseService courseService;
-
-    @GetMapping("")
-    public String listCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
-        return "listCourses";
-    }
 }

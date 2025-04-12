@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Enrollment Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            position: relative; /* Added to allow absolute positioning of the button */
+        }
+
+        h2 {
+            text-align: center;
+            color: #1E90FF;
+            margin-top: 30px;
+            font-size: 2rem;
+        }
+
+        .message, .error {
+            text-align: center;
+            padding: 10px;
+            font-size: 1.1rem;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #E0F7FA; /* Light Blue */
+            color: #0277BD; /* Blue */
+        }
+
+        td {
+            background-color: #f7fbfc;
+            font-size: 1rem;
+        }
+
+        td button {
+            padding: 6px 12px;
+            margin: 3px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #1E90FF; /* Blue */
+            color: white;
+            font-size: 1rem;
+        }
+
+        td button:hover {
+            background-color: #007BFF; /* Darker Blue */
+        }
+
+        td button:active {
+            background-color: #0056b3; /* Even darker blue on click */
+        }
+
+        /* Styling for the top-right button */
+        .top-right-btn {
+            position: absolute;
+            top: 5px;
+            right: 20px;
+            text-align: right;
+        }
+
+        a.btn {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding: 12px 20px;
+            background-color: #1E90FF; /* Blue */
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            width: 220px;
+            margin: 0 auto;
+        }
+
+        a.btn:hover {
+            background-color: #007BFF; /* Darker Blue */
+        }
+        .capacity-update {
+    margin: 30px auto;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+}
+
+.capacity-update form {
+    display: inline-block;
+}
+
+.capacity-update label {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.capacity-update input[type="number"] {
+    padding: 6px 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100px;
+}
+
+.capacity-update button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745; /* Green */
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.capacity-update button:hover {
+    background-color: #218838;
+}
+
+.capacity-update button:active {
+    background-color: #1e7e34;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Back to Admin Dashboard button at the top right corner -->
+    <div class="top-right-btn">
+        <a th:href="@{/admin/dashboard}" class="btn">Home Page</a>
+    </div>
+
+    <div th:if="${message}" class="message">[[${message}]]</div>
+    <div th:if="${error}" class="error">[[${error}]]</div>
+
+    <h2>Enrollment Requests</h2>
+    <table>
+        <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="req : ${requests}">
+            <td th:text="${req.student.id}">Student Name</td>
+            <td th:text="${req.course.name}">Course Name</td>
+            <td th:text="${req.status}">Status</td>
+            <td>
+                <form method="post" action="/admin/request/accept" style="display:inline;">
+                    <input type="hidden" name="enrollmentId" th:value="${req.id}" />
+                    <button type="submit">Accept</button>
+                </form>
+                <form method="post" action="/admin/request/reject" style="display:inline;">
+                    <input type="hidden" name="enrollmentId" th:value="${req.id}" />
+                    <button type="submit">Reject</button>
+                </form>
+            </td>    
+        </tr> 
+    </table>
+    <div th:if="${courseId}" class="capacity-update">
+        <form th:action="@{/admin/course/increase}" method="post">
+            <input type="hidden" name="courseId" th:value="${courseId}" />
+            <label for="newLimit">New Max Students:</label>
+            <input type="number" name="newLimit" min="1" required />
+            <button type="submit">Update Capacity</button>
+        </form>
+    </div>
+    
+</body>
+</html>

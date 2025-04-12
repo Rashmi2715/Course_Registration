@@ -5,35 +5,35 @@
     <link rel="stylesheet" href="/styles/payment_form.css">
 </head>
 <body>
-    <h2>Scan and Pay</h2>
+    <div class="container">
+        <h2>Scan and Pay</h2>
 
-    <!-- Dummy QR Code -->
-    <img src="/images/qr_code.png" alt="QR Code" width="200" height="200">
+        <!-- Dummy QR Code -->
+        <img src="/images/qr_code.png" alt="QR Code" width="200" height="200">
 
-    <p><strong>Pay To:</strong> Rashmi </p>
-<p><strong>UPI ID:</strong> rashmi@upi</p>
-<p><strong>Bank Account No:</strong> 763458912345</p>
-<p><strong>IFSC Code:</strong> SBIN0009876</p>
+        <p><strong>Pay To:</strong> Rashmi</p>
+        <p><strong>UPI ID:</strong> rashmi@upi</p>
+        <p><strong>Bank Account No:</strong> 763458912345</p>
+        <p><strong>IFSC Code:</strong> SBIN0009876</p>
 
+        <hr>
 
-    <hr>
+        <h3>Complete Your Payment</h3>
 
-    <h3>Complete Your Payment</h3>
-    <form th:action="@{/payment/process/submit}" method="post">
-        <!-- Hidden Enrollment ID -->
-        <input type="hidden" name="enrollmentId" th:value="${enrollmentId}" />
+        <form th:action="@{/payment/process/submit}" method="post">
+            <!-- Hidden Enrollment ID -->
+            <input type="hidden" name="enrollmentId" th:value="${enrollmentId}" />
 
-        <!-- Show Amount -->
-        <p>Amount to Pay: ₹<span th:text="${amount}"></span></p>
+            <!-- Show Amount -->
+            <p>Amount to Pay: ₹<span th:text="${amount}">0</span></p>
 
-        <!-- User UPI ID Input -->
-        <label for="upiId">Your UPI ID:</label>
-        <input type="text" name="upiId" id="upiId" placeholder="yourname@upi"
-               pattern="[a-zA-Z0-9._%+-]+@upi" required />
-        
+            <!-- User UPI ID Input -->
+            <label for="upiId">Your UPI ID:</label>
+            <input type="text" name="upiId" id="upiId" placeholder="yourname@upi"
+                   pattern="[a-zA-Z0-9._%+-]+@upi" required />
 
-        <br><br>
-        <button type="submit">Pay Now</button>
-    </form>
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
 </body>
 </html>

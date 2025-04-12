@@ -2,6 +2,7 @@ package com.example.courseRegistration.controller;
 
 import com.example.courseRegistration.model.Admin;
 import com.example.courseRegistration.model.Course;
+import com.example.courseRegistration.model.Enrollment;
 import com.example.courseRegistration.service.AdminService;
 import com.example.courseRegistration.service.CourseService;
 import jakarta.servlet.http.HttpSession;
@@ -9,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.example.courseRegistration.repository.EnrollmentRepository;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -18,6 +24,9 @@ public class AdminController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -43,40 +52,56 @@ public class AdminController {
         return "admin-dashboard";
     }
 
-    @GetMapping("/courses/new")
-    public String showAddForm(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/admin/login";
-        model.addAttribute("course", new Course());
-        return "addCourses";
-    }
+    @GetMapping("/requests")
+public String viewRequests(Model model, HttpSession session) {
+    if (session.getAttribute("admin") == null) return "redirect:/admin/login";
 
-    @PostMapping("/courses")
-    public String addCourse(@ModelAttribute Course course, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/admin/login";
+    List<Enrollment> pendingEnrollments = enrollmentRepository.findPendingWithStudents();
+    model.addAttribute("requests", pendingEnrollments);
+    return "admin-requests";
+}
+
+@PostMapping("/request/accept")
+public String acceptRequest(@RequestParam Long enrollmentId, RedirectAttributes redirectAttributes) {
+    Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElse(null);
+    if (enrollment != null) {
+        Course course = enrollment.getCourse();
+        long currentEnrollments = enrollmentRepository.countByCourseAndStatus(course, "Admin Approved");
+        if (currentEnrollments < course.getMaxStudents()) {
+            enrollment.setStatus("Admin Approved");
+            enrollmentRepository.save(enrollment);
+            redirectAttributes.addFlashAttribute("message", "Enrollment approved successfully.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Course has reached max capacity.");
+            redirectAttributes.addFlashAttribute("courseId", course.getId());
+        }
+    }
+    return "redirect:/admin/requests";
+}
+@PostMapping("/course/increase")
+public String increaseCourseCapacity(@RequestParam Long courseId, @RequestParam int newLimit, RedirectAttributes redirectAttributes) {
+    Course course = courseService.getCourseById(courseId);
+    if (course != null && newLimit > course.getMaxStudents()) {
+        course.setMaxStudents(newLimit);
         courseService.saveCourse(course);
-        return "redirect:/admin/dashboard";
+        redirectAttributes.addFlashAttribute("message", "Course capacity updated successfully.");
+    } else {
+        redirectAttributes.addFlashAttribute("error", "Invalid new limit. It must be greater than current max.");
     }
+    return "redirect:/admin/requests";
+}
 
-    @GetMapping("/courses/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/admin/login";
-        model.addAttribute("course", courseService.getCourseById(id));
-        return "editCourses";
-    }
+@PostMapping("/request/reject")
+public String rejectRequest(@RequestParam Long enrollmentId) {
+    Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElse(null);
+    if (enrollment != null) {
+        enrollment.setStatus("Admin Disapproved");
 
-    @PostMapping("/courses/update/{id}")
-    public String updateCourse(@PathVariable Long id, @ModelAttribute Course courseDetails, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/admin/login";
-        courseService.updateCourse(id, courseDetails);
-        return "redirect:/admin/dashboard";
+        enrollmentRepository.save(enrollment);
     }
+    return "redirect:/admin/requests";
+}
 
-    @GetMapping("/courses/delete/{id}")
-    public String deleteCourse(@PathVariable Long id, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/admin/login";
-        courseService.deleteCourse(id);
-        return "redirect:/admin/dashboard";
-    }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {

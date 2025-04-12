@@ -3,51 +3,91 @@
 <head>
     <title>My Enrollments</title>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 40px;
+            color: #2b6cb0;
+        }
+
         table {
-            width: 80%;
-            margin: auto;
+            width: 90%;
+            margin: 30px auto;
             border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
         }
+
         th, td {
-            border: 1px solid #888;
-            padding: 10px;
+            padding: 14px 20px;
+            text-align: center;
         }
+
         th {
             background-color: #2b6cb0;
             color: white;
-        }
-        form {
-            display: inline;
+            font-size: 16px;
         }
 
-        /* Button Styles */
-        .back-button {
+        td {
+            border-bottom: 1px solid #ddd;
+            font-size: 15px;
+        }
+
+        tr:hover {
+            background-color: #f1f9ff;
+        }
+
+        .action-button, .back-button {
             display: inline-block;
-            width: auto;
-            padding: 12px 30px;
+            padding: 10px 22px;
             background-color: #2b6cb0;
             color: white;
             text-decoration: none;
-            font-size: 16px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 20px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            margin: 5px 5px;
             transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
         }
 
-        .back-button:hover {
+        .action-button:hover, .back-button:hover {
             background-color: #1d4d73;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
-        .back-button:active {
-            background-color: #2b6cb0;
-            transform: translateY(0);
+        .action-button:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button[type="submit"] {
+            background-color: #dc3545;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #a71d2a;
         }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">My Enrollments</h2>
+    <h2>My Enrollments</h2>
 
     <table>
         <tr>
@@ -61,26 +101,31 @@
             <td th:text="${enrollment.course.department}">Department</td>
             <td th:text="${enrollment.status}">Pending</td>
             <td>
-                <!-- If Pending: Show Confirm and Remove -->
-                <div th:if="${enrollment.status == 'Pending'}">
-                    <a th:href="@{/payment/form/{id}(id=${enrollment.id})}" class="back-button">Confirm</a>
-            
-                    <form th:action="@{/student/enrollment/{id}/remove(id=${enrollment.id})}" method="post">
-                        <button type="submit">Remove</button>
-                    </form>
-                </div>
-            
-                <!-- If Confirmed: Show only disabled Confirmed button -->
-                <div th:if="${enrollment.status == 'Confirmed'}">
-                    <button class="back-button" style="background-color: gray; cursor: not-allowed;" disabled>Confirmed</button>
-                </div>
+                <!-- Show "Make Payment" link if status is Admin Approved -->
+                <a th:if="${enrollment.status == 'Admin Approved'}"
+                   th:href="@{/payment/form/{id}(id=${enrollment.id})}"
+                   class="action-button">Make Payment</a>
+
+                <!-- Display button with status, but disable if not 'Admin Approved' -->
+                <button th:if="${enrollment.status != 'Admin Approved'}"
+                        class="action-button"
+                        disabled
+                        th:text="${enrollment.action}">Confirmed</button>
+
+                <!-- Remove button shown only when action is 'Wait', 'Make Payment', or 'Under Review' -->
+                <form th:if="${enrollment.action == 'Wait' or enrollment.action == 'Make Payment' or enrollment.action == 'Under Review'}"
+                      th:action="@{/student/enrollment/{id}/remove(id=${enrollment.id})}" method="post"
+                      style="display: inline;">
+                    <button type="submit" class="action-button" style="background-color: #dc3545;">Remove</button>
+                </form>
+
+                
             </td>
-            
         </tr>
     </table>
 
-    <!-- Back to Courses button below the table -->
-    <a th:href="@{/student/courses}" class="back-button">← Back to Courses</a>
-
+    <div class="back-container">
+        <a th:href="@{/student/courses}" class="back-button">← Back to Courses</a>
+    </div>
 </body>
 </html>

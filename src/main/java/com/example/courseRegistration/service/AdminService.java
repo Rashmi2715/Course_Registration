@@ -21,4 +21,8 @@ public class AdminService {
         }
         return null;
     }
+
+    public Admin getAdminByEmail(String email) {
+        return adminRepo.findByEmail(email);
+    }
 }
