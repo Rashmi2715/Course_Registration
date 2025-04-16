@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Course Enrollments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1E90FF;
+            padding: 20px;
+            background-color: #ffffff;
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1E90FF;
+            margin-top: 30px;
+            font-size: 2rem;
+        }
+
+        .message, .error {
+            text-align: center;
+            padding: 10px;
+            font-size: 1.1rem;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #E0F7FA;
+            color: #0277BD;
+        }
+
+        td {
+            background-color: #f7fbfc;
+            font-size: 1rem;
+        }
+
+        td button {
+            padding: 6px 12px;
+            margin: 3px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #1E90FF;
+            color: white;
+            font-size: 1rem;
+        }
+
+        td button:hover {
+            background-color: #007BFF;
+        }
+
+        td button:active {
+            background-color: #0056b3;
+        }
+
+        .top-right-btn {
+            position: absolute;
+            top: 5px;
+            right: 20px;
+            text-align: right;
+        }
+
+        a.btn {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding: 12px 20px;
+            background-color: #1E90FF;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            width: 220px;
+            margin: 0 auto;
+        }
+
+        a.btn:hover {
+            background-color: #007BFF;
+        }
+
+        form {
+            width: 50%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button[type="submit"] {
+            background-color: #1E90FF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #007BFF;
+        }
+
+        .capacity-update {
+            margin: 30px auto;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+        }
+
+        .capacity-update form {
+            display: inline-block;
+        }
+
+        .capacity-update label {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .capacity-update input[type="number"] {
+            padding: 6px 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100px;
+        }
+
+        .capacity-update button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .capacity-update button:hover {
+            background-color: #218838;
+        }
+
+        .capacity-update button:active {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+    <h1>View Confirmed Enrollments</h1>
+    <div class="top-right-btn">
+        <a th:href="@{/admin/dashboard}" class="btn">Home Page</a>
+    </div>
+
+    <form th:action="@{/admin/enrollments}" method="post">
+        <label for="course">Select Course:</label>
+        <select name="courseId" id="course">
+            <option th:each="course : ${courses}"
+                    th:value="${course.id}"
+                    th:text="${course.name}"
+                    th:selected="${course.id == selectedCourseId}"></option>
+        </select>
+        <button type="submit">View Enrollments</button>
+    </form>
+
+    <div th:if="${noEnrollmentsMessage}" class="message">
+        <p th:text="${noEnrollmentsMessage}"></p>
+    </div>
+
+    <div th:if="${enrollments != null and enrollments.size() > 0}">
+        <h2>Confirmed Students</h2>
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+            </tr>
+            <tr th:each="enrollment : ${enrollments}">
+                <td th:text="${enrollment.student.fullname}">Student Name</td>
+                <td th:text="${enrollment.student.email}">Email</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

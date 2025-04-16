@@ -16,5 +16,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     long countByCourseAndStatus(Course course, String status);
     @Query("SELECT e FROM Enrollment e JOIN FETCH e.student WHERE e.status = 'Pending'")
     List<Enrollment> findPendingWithStudents();
-
+    List<Enrollment> findByCourseIdAndStatus(Long courseId, String status);
 }

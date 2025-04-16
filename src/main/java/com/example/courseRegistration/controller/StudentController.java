@@ -1,20 +1,22 @@
 package com.example.courseRegistration.controller;
 
 import java.util.List;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.courseRegistration.model.Course;
 import com.example.courseRegistration.model.Enrollment;
 import com.example.courseRegistration.model.Student;
-import com.example.courseRegistration.service.CourseService;
-import com.example.courseRegistration.service.StudentService;
-import jakarta.servlet.http.HttpSession;
-
 import com.example.courseRegistration.repository.CourseRepository;
 import com.example.courseRegistration.repository.EnrollmentRepository;
 import com.example.courseRegistration.repository.StudentRepository;
+import com.example.courseRegistration.service.CourseService;
+import com.example.courseRegistration.service.StudentService;
+import com.example.courseRegistration.strategy.PasswordStrategy;
+import com.example.courseRegistration.strategy.SimplePasswordStrategy;
+import com.example.courseRegistration.util.UserFactory;
 
-//import java.security.Principal;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+
     @Autowired
     private StudentService studentService;
 
@@ -33,6 +36,15 @@ public class StudentController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
+
+    // Injecting the password strategy
+    private final PasswordStrategy passwordStrategy = new SimplePasswordStrategy();
+
     @GetMapping("/signup")
     public String showSignupPage() {
         return "student-signup";
@@ -40,23 +52,32 @@ public class StudentController {
 
     @PostMapping("/signup")
     public String registerStudent(@RequestParam String fullname,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String confirmPassword,
-            Model model) {
+                                   @RequestParam String email,
+                                   @RequestParam String password,
+                                   @RequestParam String confirmPassword,
+                                   Model model) {
         if (fullname.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             model.addAttribute("error", "All fields are required!");
             return "student-signup";
         }
 
-        if (!password.equals(confirmPassword)) {
+        if (!passwordStrategy.match(password, confirmPassword)) {
             model.addAttribute("error", "Passwords do not match! Please try again.");
             return "student-signup";
         }
 
-        Student student = new Student(fullname, email, password);
+        /*Student student = new Student(fullname, email, password);
         studentService.registerStudent(student);
         return "redirect:/student/login";
+        */
+        Student student = new Student();
+        student.setFullname(fullname);
+        student.setEmail(email);
+        student.setPassword(password);
+
+
+        studentService.registerStudent(student);
+        return "redirect:/student/login"; 
     }
 
     @GetMapping("/login")
@@ -65,9 +86,10 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
-        Student student = studentService.authenticateStudent(email, password);
-        if (student != null) {
+    public String login(@RequestParam String email, @RequestParam String password,
+                        HttpSession session, Model model) {
+        Student student = studentRepository.findByEmail(email);
+        if (student != null && passwordStrategy.match(password, student.getPassword())) {
             session.setAttribute("student", student);
             return "redirect:/student/dashboard";
         }
@@ -75,16 +97,15 @@ public class StudentController {
         return "student-login";
     }
 
-
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
-    Student student = (Student) session.getAttribute("student");
-    if (student == null) {
-        return "redirect:/student/login";
-    }
+        Student student = (Student) session.getAttribute("student");
+        if (student == null) {
+            return "redirect:/student/login";
+        }
 
-    model.addAttribute("courses", studentService.getAllCourses());
-    return "student-dashboard";  // the merged dashboard view with course list
+        model.addAttribute("courses", studentService.getAllCourses());
+        return "student-dashboard";
     }
 
     @GetMapping("/logout")
@@ -100,10 +121,10 @@ public class StudentController {
 
     @PostMapping("/forgot-password")
     public String resetPassword(@RequestParam String email,
-            @RequestParam String newPassword,
-            @RequestParam String confirmPassword,
-            Model model) {
-        if (!newPassword.equals(confirmPassword)) {
+                                @RequestParam String newPassword,
+                                @RequestParam String confirmPassword,
+                                Model model) {
+        if (!passwordStrategy.match(newPassword, confirmPassword)) {
             model.addAttribute("error", "Passwords do not match!");
             return "student-forgot-password";
         }
@@ -116,8 +137,8 @@ public class StudentController {
             model.addAttribute("error", "Email not found! Please register.");
             return "redirect:/student/signup";
         }
-
     }
+
     @GetMapping("/courses")
     public String browseCourses(HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("student");
@@ -126,20 +147,12 @@ public class StudentController {
         }
 
         model.addAttribute("courses", studentService.getAllCourses());
-        return "student-dashboard"; // This should be the name of the HTML template
+        return "student-dashboard";
     }
-
-    
-
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
-
-    @Autowired
-    private CourseRepository courseRepository; // If not already available
 
     @GetMapping("/enroll/{courseId}")
     public String enrollInCourse(@PathVariable Long courseId, HttpSession session,
-            RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes) {
         Student sessionStudent = (Student) session.getAttribute("student");
         if (sessionStudent == null) {
             return "redirect:/student/login";
@@ -148,14 +161,13 @@ public class StudentController {
         Student student = studentRepository.findByEmail(sessionStudent.getEmail());
         Course course = courseService.getCourseById(courseId);
 
-        // Check if already enrolled
         boolean alreadyEnrolled = enrollmentRepository.findByStudentAndCourse(student, course) != null;
 
         if (!alreadyEnrolled) {
             Enrollment enrollment = new Enrollment();
             enrollment.setStudent(student);
             enrollment.setCourse(course);
-            enrollment.setStatus("Pending"); // or "Confirmed" if you prefer
+            enrollment.setStatus("Pending");
             enrollmentRepository.save(enrollment);
 
             redirectAttributes.addFlashAttribute("message", "Successfully enrolled in " + course.getName() + "!");
@@ -178,29 +190,21 @@ public class StudentController {
         return "student-enrollments";
     }
 
-
-    @Controller
-    public class EnrollmentController {
-
-        @Autowired
-        private EnrollmentRepository enrollmentRepository;
-
-        @PostMapping("/student/enrollment/{id}/remove")
+    @PostMapping("/student/enrollment/{id}/remove")
     public String removeEnrollment(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Enrollment enrollment = enrollmentRepository.findById(id).orElse(null);
-        
-        if (enrollment != null && 
-            ("Admin Disapproved".equalsIgnoreCase(enrollment.getStatus()) || 
-             "Pending".equalsIgnoreCase(enrollment.getStatus()) || 
+
+        if (enrollment != null &&
+            ("Admin Disapproved".equalsIgnoreCase(enrollment.getStatus()) ||
+             "Pending".equalsIgnoreCase(enrollment.getStatus()) ||
              "Admin Approved".equalsIgnoreCase(enrollment.getStatus()))) {
             enrollmentRepository.delete(enrollment);
             redirectAttributes.addFlashAttribute("message", "Enrollment removed successfully.");
         } else {
-            redirectAttributes.addFlashAttribute("error", "Only enrollments with action 'Wait', 'Make Payment', or 'Under Review' can be removed.");
+            redirectAttributes.addFlashAttribute("error", "Only certain enrollments can be removed.");
         }
-        
+
         return "redirect:/student/enrollments";
-    }
     }
 
     @PostMapping("/student/enrollment/{id}/confirm")
@@ -212,5 +216,4 @@ public class StudentController {
         }
         return "redirect:/student/my-enrollments";
     }
-
 }

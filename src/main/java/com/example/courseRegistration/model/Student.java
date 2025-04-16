@@ -77,4 +77,12 @@ public class Student {
     public void enrollCourse(Course course) {
         this.courses.add(course);
     }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
